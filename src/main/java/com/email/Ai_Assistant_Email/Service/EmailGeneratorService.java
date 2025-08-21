@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
@@ -37,9 +38,13 @@ public class EmailGeneratorService {
                 }
         );
 
+        String finalUrl = UriComponentsBuilder.fromUriString(GeminiApiUrl)
+                .queryParam("key", GeminiApiKey)
+                .toUriString();
+
         //Do rqst and get response
         String response = webClient.post()
-                .uri(GeminiApiUrl+GeminiApiKey)
+                .uri(finalUrl)
                 .header("Conttent-Type", "application/json")
                 .bodyValue(requestBody)
                 .retrieve()
